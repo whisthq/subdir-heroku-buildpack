@@ -1,13 +1,21 @@
-Add as a first buildpack in the chain. Set `PROJECT_PATH` environment variable to point to project root. It will be promoted to slug's root, everything else will be erased. Following buildpack (e.g. nodejs) will finish slug compilation.
+# Subdir buildpack
 
-**Disclaimer:** I may change the code without notice, so always pin to specific github version. Provided as is.
+This buildpack is used to deploy an application to Heroku from a subdirectory of a git repository, rather than from the repository root. It is based on [timanovsky's subdir-heroku-buildpack](https://github.com/timanovsky/subdir-heroku-buildpack).
 
-# How to use:
-1. `heroku buildpacks:clear` if necessary
-2. `heroku buildpacks:set https://github.com/timanovsky/subdir-heroku-buildpack`
-3. `heroku buildpacks:add heroku/nodejs` or whatever buildpack you need for your application
-4. `heroku config:set PROJECT_PATH=projects/nodejs/frontend` pointing to what you want to be a project root.
-5. Deploy your project to Heroku.
+When this buildpack is set to be the first buildpack in the Heroku build chain, application deployment from a subdirectory happens in three steps:
 
-# How it works
-The buildpack takes subdirectory you configured, erases everything else, and copies that subdirectory to project root. Then normal Heroku slug compilation proceeds.
+ 1. The contents of the directory specified by `PROJECT_PATH` are saved in a temporary location.
+ 2. All non-hidden files are deleted from the repository root.
+ 3. The contents of the temporary directory are copied into the repository root.
+
+## Usage
+
+Add this buildpack as the first (or one of the first) buildpacks in your application's build chain. It must certainly appear before any buildpacks that expect to be able to operate on the root directory. You must also set the `PROJECT_PATH` configuration variable on your application to indicate the subdirectory to deploy.
+
+To prepend this buildpack to your application's build chain, run the command:
+
+    heroku buildpacks:add --index=1 --app=<your-app-name> https://github.com/owenniles/subdir-heroku-buildpack.git
+
+To set the `PROJECT_PATH` configuration variable, run the command:
+
+    heroku config:set --app=<your-app-name> PROJECT_PATH=<path/to/subdirectory>
