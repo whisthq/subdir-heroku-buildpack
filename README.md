@@ -1,4 +1,4 @@
-# Fractal Heroku Subdirectory Buildpack
+# Whist Heroku Subdirectory Buildpack
 
 This buildpack is used to deploy an application to Heroku from a subdirectory of a git repository, rather than from the repository root. It is based on [timanovsky's subdir-heroku-buildpack](https://github.com/timanovsky/subdir-heroku-buildpack).
 
@@ -14,7 +14,7 @@ Add this buildpack as the first (or one of the first) buildpacks in your applica
 
 To prepend this buildpack to your application's build chain, run the command:
 
-    heroku buildpacks:add --index=1 --app=<your-app-name> https://github.com/fractal/subdir-heroku-buildpack.git
+    heroku buildpacks:add --index=1 --app=<your-app-name> https://github.com/whisthq/subdir-heroku-buildpack.git
 
 To set the `PROJECT_PATH` configuration variable, run the command:
 
